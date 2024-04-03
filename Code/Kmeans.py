@@ -1,4 +1,4 @@
-__authors__ = 'TO_BE_FILLED'
+__authors__ = '[1632368, 1632367, 1632823]'
 __group__ = 'TO_BE_FILLED'
 
 import numpy as np
