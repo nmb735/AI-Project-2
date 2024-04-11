@@ -91,8 +91,8 @@ class KMeans:
                 unique_pixels.add(pixel)
             self.centroids = np.array(list(unique_pixels))
 
-        elif self.options['km_init'] == 'custom':
-            pass
+        elif self.options['km_init'] == 'custom': # Custom initialization: random, duplicates allowed
+            self.centroids = np.random.randint(0, pixel_rep_const, size=(self.K, self.X.shape[1]))
 
         else:
             pass
