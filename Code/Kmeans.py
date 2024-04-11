@@ -112,7 +112,12 @@ class KMeans:
         ##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
         ##  AND CHANGE FOR YOUR OWN CODE
         #######################################################
-        pass
+        self.old_centroids = np.copy(self.centroids)
+
+        # Check if there is any cluster without points and calculate the new centroids
+        if np.any(self.labels) > 0:
+            for i in range(self.K):
+                self.centroids[i] = np.mean(self.X[self.labels == i], axis=0)
 
     def converges(self):
         """
