@@ -180,4 +180,16 @@ def get_colors(centroids):
     ##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
     ##  AND CHANGE FOR YOUR OWN CODE
     #########################################################
-    return list(utils.colors)
+    #print(centroids)
+    
+    #calculem les probabilitats del centroide
+    color_prob = utils.get_color_prob(centroids)
+    #print(color_prob)
+    #trobem la posició de l'element més gran de les probabilitats, amb axis=1 busquem l'element major de la fila
+    pos_max = np.argmax(color_prob, axis = 1)
+    #print(pos_max)
+    #busquem el color que representa la probabilitat més alta
+    labels = utils.colors[pos_max]
+    #print(labels)
+    
+    return labels
