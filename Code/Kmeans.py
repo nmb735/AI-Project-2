@@ -93,6 +93,7 @@ class KMeans:
 
         elif self.options['km_init'] == 'custom':
             pass
+
         else:
             pass
 
@@ -129,12 +130,19 @@ class KMeans:
         """
         Runs K-Means algorithm until it converges or until the number of iterations is smaller
         than the maximum number of iterations.
+        Args:
+            None
         """
-        #######################################################
-        ##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
-        ##  AND CHANGE FOR YOUR OWN CODE
-        #######################################################
-        pass
+        self.num_iter = 0
+        self._init_centroids()
+
+        while self.num_iter < self.options['max_iter']:
+            self.get_labels()
+            self.get_centroids()
+            if self.converges():
+                break
+            self.num_iter += 1
+        
 
     def withinClassDistance(self):
         """
