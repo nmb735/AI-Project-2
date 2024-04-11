@@ -69,7 +69,7 @@ class KMeans:
         Args:
             None
         """
-
+        pixel_rep_const = 255
         self.old_centroids = np.zeros((self.K, self.X.shape[1]))
         self.centroids = np.zeros((self.K, self.X.shape[1]))
 
@@ -85,7 +85,12 @@ class KMeans:
                         break
             self.centroids = np.array(extracted_pixels)
         elif self.options['km_init'] == 'random':
-            pass
+            unique_pixels = set()
+            while len(unique_pixels) < self.K:
+                pixel = tuple(np.random.randint(0, pixel_rep_const, size=(self.X.shape[1])))
+                unique_pixels.add(pixel)
+            self.centroids = np.array(list(unique_pixels))
+
         elif self.options['km_init'] == 'custom':
             pass
         else:
