@@ -100,7 +100,9 @@ class KMeans:
         ##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
         ##  AND CHANGE FOR YOUR OWN CODE
         #######################################################
-        self.labels = np.random.randint(self.K, size=self.X.shape[0])
+
+        dist = distance(self.X, self.centroids)
+        self.labels = np.argmin(dist, axis=1)
 
     def get_centroids(self):
         """
