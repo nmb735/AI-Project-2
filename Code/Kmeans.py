@@ -1,4 +1,4 @@
-__authors__ = '[1632368, 1632367, 1632823]'
+__authors__ = ['1632368', '1632367', '1632823']
 __group__ = ''
 
 import numpy as np
@@ -34,7 +34,13 @@ class KMeans:
         ##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
         ##  AND CHANGE FOR YOUR OWN CODE
         #######################################################
-        self.X = np.random.rand(100, 5)
+        #this only works asuming that the input is a np matrix! (Adri)
+        X = X.astype(float) # a) float values check
+        
+        if X.ndim > 2: # b) matrix dimensions check
+            X = X.reshape(-1, 3)
+        
+        self.X = X
 
     def _init_options(self, options=None):
         """
