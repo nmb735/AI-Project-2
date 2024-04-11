@@ -34,12 +34,14 @@ class KMeans:
         ##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
         ##  AND CHANGE FOR YOUR OWN CODE
         #######################################################
-        #this only works asuming that the input is a np matrix! (Adri)
-        X = X.astype(float) # a) float values check
-        
-        if X.ndim > 2: # b) matrix dimensions check
+        if not isinstance(X, np.ndarray):
+            X = np.array(X)
+
+        X = X.astype(float)
+
+        if X.ndim > 2:
             X = X.reshape(-1, 3)
-        
+
         self.X = X
 
     def _init_options(self, options=None):
@@ -73,16 +75,22 @@ class KMeans:
         Initialization of centroids
         """
 
-        #######################################################
-        ##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
-        ##  AND CHANGE FOR YOUR OWN CODE
-        #######################################################
-        if self.options['km_init'].lower() == 'first':
-            self.centroids = np.random.rand(self.K, self.X.shape[1])
-            self.old_centroids = np.random.rand(self.K, self.X.shape[1])
+        self.old_centroids = np.zeros((self.K, self.X.shape[1]))
+        self.centroids = np.zeros((self.K, self.X.shape[1]))
+
+        if self.options['km_init'] == 'first':
+            unique_pixels = set()
+            extracted_pixels = []
+            for pixel in self.X:
+                pixel_tuple = tuple(pixel)
+                if pixel_tuple not in unique_pixels:
+                    unique_pixels.add(pixel_tuple)
+                    extracted_pixels.append(pixel)
+                    if len(extracted_pixels) == self.K:
+                        break
+            self.centroids = np.array(extracted_pixels)
         else:
-            self.centroids = np.random.rand(self.K, self.X.shape[1])
-            self.old_centroids = np.random.rand(self.K, self.X.shape[1])
+            pass
 
     def get_labels(self):
         """
@@ -163,7 +171,7 @@ def distance(X, C):
     ##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
     ##  AND CHANGE FOR YOUR OWN CODE
     #########################################################
-    return np.random.rand(X.shape[0], C.shape[0])
+    return np.sqrt(np.sum((X[:, np.newaxis, :] - C) ** 2, axis=2))
 
 
 def get_colors(centroids):
@@ -180,16 +188,4 @@ def get_colors(centroids):
     ##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
     ##  AND CHANGE FOR YOUR OWN CODE
     #########################################################
-    #print(centroids)
-    
-    #calculem les probabilitats del centroide
-    color_prob = utils.get_color_prob(centroids)
-    #print(color_prob)
-    #trobem la posició de l'element més gran de les probabilitats, amb axis=1 busquem l'element major de la fila
-    pos_max = np.argmax(color_prob, axis = 1)
-    #print(pos_max)
-    #busquem el color que representa la probabilitat més alta
-    labels = utils.colors[pos_max]
-    #print(labels)
-    
-    return labels
+    return list(utils.colors)
