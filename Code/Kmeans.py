@@ -9,19 +9,18 @@ class KMeans:
 
     def __init__(self, X, K=1, options=None):
         """
-         Constructor of KMeans class
-             Args:
-                 K (int): Number of cluster
-                 options (dict): dictionary with options
-            """
+        Constructor of KMeans class
+
+        Args:
+            X (list or np.array): list(matrix) of all pixel values
+            K (int): Number of cluster. 1 by default.
+            options (dict): dictionary with options. None by default.
+        """
         self.num_iter = 0
         self.K = K
         self._init_X(X)
         self._init_options(options)  # DICT options
-
-    #############################################################
-    ##  THIS FUNCTION CAN BE MODIFIED FROM THIS POINT, if needed
-    #############################################################
+        ##  THIS FUNCTION CAN BE MODIFIED FROM THIS POINT, if needed
 
     def _init_X(self, X):
         """Initialization of all pixels, sets X as an array of data in vector form (PxD)
@@ -30,10 +29,6 @@ class KMeans:
                     if matrix has more than 2 dimensions, the dimensionality of the sample space is the length of
                     the last dimension
         """
-        #######################################################
-        ##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
-        ##  AND CHANGE FOR YOUR OWN CODE
-        #######################################################
         if not isinstance(X, np.ndarray):
             X = np.array(X)
 
@@ -66,13 +61,13 @@ class KMeans:
         # If your methods need any other parameter you can add it to the options dictionary
         self.options = options
 
-        #############################################################
         ##  THIS FUNCTION CAN BE MODIFIED FROM THIS POINT, if needed
-        #############################################################
 
     def _init_centroids(self):
         """
-        Initialization of centroids
+        Initialization of centroids for K-Means algorithm
+        Args:
+            None
         """
 
         self.old_centroids = np.zeros((self.K, self.X.shape[1]))
@@ -89,35 +84,39 @@ class KMeans:
                     if len(extracted_pixels) == self.K:
                         break
             self.centroids = np.array(extracted_pixels)
+        elif self.options['km_init'] == 'random':
+            pass
+        elif self.options['km_init'] == 'custom':
+            pass
         else:
             pass
 
     def get_labels(self):
         """
-        Calculates the closest centroid of all points in X and assigns each point to the closest centroid
+        Calculates the closest centroid of all points in X and assigns each point to the closest centroid.
+        Args:
+            None
         """
-        #######################################################
-        ##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
-        ##  AND CHANGE FOR YOUR OWN CODE
-        #######################################################
-
-        dist = distance(self.X, self.centroids)
-        self.labels = np.argmin(dist, axis=1)
+        self.labels = np.argmin((distance(self.X, self.centroids)), axis=1)
 
     def get_centroids(self):
         """
         Calculates coordinates of centroids based on the coordinates of all the points assigned to the centroid
+        Args:
+            None
         """
         self.old_centroids = np.copy(self.centroids)
 
         # Check if there is any cluster without points and calculate the new centroids
         if np.any(self.labels) > 0:
-            for i in range(self.K):
+            for i in np.arange(self.K):
                 self.centroids[i] = np.mean(self.X[self.labels == i], axis=0)
 
     def converges(self):
         """
-        Checks if there is a difference between current and old centroids
+        Checks if there is a difference between current and old centroids.
+        Args:
+            None
         """
         return np.allclose(self.centroids, self.old_centroids, self.options['tolerance'])
 
@@ -153,7 +152,7 @@ class KMeans:
         #######################################################
         pass
 
-
+# Out-of-class functions
 def distance(X, C):
     """
     Calculates the distance between each pixel and each centroid
