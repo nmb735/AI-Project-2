@@ -24,6 +24,7 @@ class KMeans:
 
     def _init_X(self, X):
         """Initialization of all pixels, sets X as an array of data in vector form (PxD)
+
             Args:
                 X (list or np.array): list(matrix) of all pixel values
                     if matrix has more than 2 dimensions, the dimensionality of the sample space is the length of
@@ -42,6 +43,7 @@ class KMeans:
     def _init_options(self, options=None):
         """
         Initialization of options in case some fields are left undefined
+
         Args:
             options (dict): dictionary with options
         """
@@ -66,6 +68,7 @@ class KMeans:
     def _init_centroids(self):
         """
         Initialization of centroids for K-Means algorithm
+
         Args:
             None
         """
@@ -100,6 +103,7 @@ class KMeans:
     def get_labels(self):
         """
         Calculates the closest centroid of all points in X and assigns each point to the closest centroid.
+
         Args:
             None
         """
@@ -108,6 +112,7 @@ class KMeans:
     def get_centroids(self):
         """
         Calculates coordinates of centroids based on the coordinates of all the points assigned to the centroid
+
         Args:
             None
         """
@@ -121,6 +126,7 @@ class KMeans:
     def converges(self):
         """
         Checks if there is a difference between current and old centroids.
+
         Args:
             None
         """
@@ -130,6 +136,7 @@ class KMeans:
         """
         Runs K-Means algorithm until it converges or until the number of iterations is smaller
         than the maximum number of iterations.
+
         Args:
             None
         """
@@ -146,68 +153,66 @@ class KMeans:
 
     def withinClassDistance(self):
         """
-         returns the within class distance of the current clustering
-        """
+        Returns the within class distance of the current clustering
 
-        #######################################################
-        ##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
-        ##  AND CHANGE FOR YOUR OWN CODE
-        #######################################################
+        Args:
+            None
+        """
         WCD = 0
         for i in range(self.K):
-            #Agafem els elements propers al centroid
-            son_propers = self.labels == i;
-            #Calculem distancia entre l'element proper i el centroid
-            distancies = self.X[son_propers]-self.centroids[i]
-            #Elevem aquest valor al cuadrat
-            distanciesE2 = np.power(distancies, 2)
-            #Fem la suma per fila
-            distancia = np.sum(distanciesE2, axis = 1)
-            #Suma total
-            WCD += np.sum(distancia)
-            #print(WCD)
-        #Dividim per el nombre d'elements
+            # Select the elements that are close to the centroid
+            are_close = self.labels == i
+
+            # Calculate the distance between the next element and the centroid
+            distances = self.X[are_close]-self.centroids[i]
+
+            # Elevate this value to the square
+            distancesE2 = np.power(distances, 2)
+
+            # Sum by row
+            distance = np.sum(distancesE2, axis = 1)
+
+            # Sum all the distances
+            WCD += np.sum(distance)
+
+        # Divide by the number of elements
         WCD = WCD / len(self.X)
         self.WCD = WCD
         return WCD 
 
     def find_bestK(self, max_K):
         """
-         sets the best k analysing the results up to 'max_K' clusters
+         Sets the best k analyzing the results up to 'max_K' clusters
+
+         Args:
+                max_k (int): maximum K value to test against
         """
-        #######################################################
-        ##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
-        ##  AND CHANGE FOR YOUR OWN CODE
-        #######################################################
-        #Apliquem K-Means una primera vegada amb K = 2
+        # Apply K-Means for the first time with K = 2
         self.K = 2
         self.fit()
-        #Calculem WCD de K = 2
-        WCD_anterior = self.withinClassDistance()
+        #Calculate WCD of K = 2
+        previous_WCD = self.withinClassDistance()
         
         i = 2 #=K
         DEC = 0
-        #Executem el bucle fins que trobem la K optima o ens pasem de K maxima
+        # Execute the loop until we find the optimal K or we exceed the maximum K
         while (i < max_K) and ((100-DEC) >= 20):
             i += 1
-            #Apliquem K-Means amb K per comparar amb amb el K-Means amb K-1
+            # Apply K-Means with K to compare with K-Means with K-1
             self.K = i
             self.fit()
-            #Calculem WCD de K
+            # Calculate WCD of K
             WCD = self.withinClassDistance()
-            #Calculem DEC amb WCD de K i WWCD de K-1
-            DEC = 100*(WCD/WCD_anterior)
-            #print(WCD_anterior)
-            #print(WCD)
-            #print(DEC)
-            #El nou valor de WCD ara es l'anterior
-            WCD_anterior = WCD
-        #Si hem trobat una K optima, hem d'executar K-Means amb K-1, ja que K es pasa del nostre criteri
+            # Calculate DEC with WCD of K and WCD of K-1
+            DEC = 100*(WCD/previous_WCD)
+            # The new value of WCD is now the previous one
+            previous_WCD = WCD
+        # If we have found an optimal K, we must execute K-Means with K-1, since K is passed from our criterion
         if (i != max_K):
             self.K = i-1
             self.fit()
             return i
-        #Sino tornem la maxima
+        # If we have not found an optimal K, we must return the maximum K
         else:
             return max_K
 
@@ -235,16 +240,13 @@ def get_colors(centroids):
     Returns:
         labels: list of K labels corresponding to one of the 11 basic colors
     """
-    #print(centroids)
-    
-    #calculem les probabilitats del centroide
+    """
+    # Calculate the probability of each color    
     color_prob = utils.get_color_prob(centroids)
-    #print(color_prob)
-    #trobem la posició de l'element més gran de les probabilitats, amb axis=1 busquem l'element major de la fila
+    # Find the position of the element with the highest probability, with axis=1 we look for the largest element in the row
     pos_max = np.argmax(color_prob, axis = 1)
-    #print(pos_max)
-    #busquem el color que representa la probabilitat més alta
+    # Find the color that represents the highest probability
     labels = utils.colors[pos_max]
-    #print(labels)
+    """
     
-    return labels
+    return utils.colors[(np.argmax((utils.get_color_prob(centroids)), axis=1))]
