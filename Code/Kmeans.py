@@ -12,7 +12,7 @@ class KMeans:
         Constructor of KMeans class
 
         Args:
-            X (list or np.array): list(matrix) of all pixel values
+            X (list or np.array): list of all pixel values
             K (int): Number of cluster. 1 by default.
             options (dict): dictionary with options. None by default.
         """
@@ -155,16 +155,15 @@ class KMeans:
         Args:
             None
         """
-        self.num_iter = 0
+        self.num_iterations = 0
         self._init_centroids()
 
-        while self.num_iter < self.options['max_iter']:
+        while self.num_iterations < self.options['max_iter']:
             self.get_labels()
             self.get_centroids()
             if self.converges():
                 break
-            self.num_iter += 1
-        
+            self.num_iterations += 1
 
     def withinClassDistance(self):
         """
@@ -194,7 +193,7 @@ class KMeans:
         WCD = WCD / len(self.X)
         self.WCD = WCD
         return WCD 
-
+    
     def find_bestK(self, max_K):
         """
         Sets the best k analyzing the results up to 'max_K' clusters
