@@ -68,7 +68,6 @@ class KMeans:
    def _init_centroids(self):
         """
         Initialization of centroids for K-Means algorithm
-
         Args:
             None
         """
@@ -90,9 +89,7 @@ class KMeans:
         elif self.options['km_init'] == 'random':
             unique_pixels = set()
             extracted_pixels = []
-            print(self.X[1])
             np.random.shuffle(self.X)
-            print(self.X[1])
             for pixel in self.X:
                 pixel_tuple = tuple(pixel)
                 if pixel_tuple not in unique_pixels:
@@ -105,9 +102,7 @@ class KMeans:
         elif self.options['km_init'] == 'custom': 
             unique_pixels = set()
             extracted_pixels = []
-            print(self.X[1])
             np.random.shuffle(self.X)
-            print(self.X[1])
             for pixel in self.X:
                 pixel_tuple = tuple(pixel)
                 if pixel_tuple not in unique_pixels:
@@ -248,7 +243,7 @@ def distance(X, C):
         dist: PxK numpy array position ij is the distance between the
         i-th point of the first set an the j-th point of the second set
     """
-    return np.sqrt(np.sum((X[:, np.newaxis, :] - C) ** 2, axis=2))
+    return np.sqrt(np.sum((X[:, np.newaxis] - C) ** 2, axis=2))
 
 
 def get_colors(centroids):
