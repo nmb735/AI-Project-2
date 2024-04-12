@@ -236,16 +236,10 @@ def distance(X, C):
     """
     Calculates the distance between each pixel and each centroid
     Args:
-        X (numpy array): PxD 1st set of data points (usually data points)
-        C (numpy array): KxD 2nd set of data points (usually cluster centroids points)
-
-    Returns:
-        dist: PxK numpy array position ij is the distance between the
-        i-th point of the first set an the j-th point of the second set
+        X (numpy array): PxD 1st set of data points 
+        C (numpy array): KxD 2nd set of data points 
     """
-    return np.linalg.norm(X[:, np.newaxis] - C, axis=2)
-
-
+    return np.linalg.norm(np.expand_dims(X, axis=1) - C, axis=2)
 
 def get_colors(centroids):
     """
