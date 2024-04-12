@@ -65,55 +65,55 @@ class KMeans:
 
         ##  THIS FUNCTION CAN BE MODIFIED FROM THIS POINT, if needed
 
-   def _init_centroids(self):
-        """
-        Initialization of centroids for K-Means algorithm
-        Args:
-            None
-        """
-        pixel_rep_const = 255
-        self.old_centroids = np.zeros((self.K, self.X.shape[1]))
-        self.centroids = np.zeros((self.K, self.X.shape[1]))
+    def _init_centroids(self):
+            """
+            Initialization of centroids for K-Means algorithm
+            Args:
+                None
+            """
+            pixel_rep_const = 255
+            self.old_centroids = np.zeros((self.K, self.X.shape[1]))
+            self.centroids = np.zeros((self.K, self.X.shape[1]))
 
-        if self.options['km_init'] == 'first':
-            unique_pixels = set()
-            extracted_pixels = []
-            for pixel in self.X:
-                pixel_tuple = tuple(pixel)
-                if pixel_tuple not in unique_pixels:
-                    unique_pixels.add(pixel_tuple)
-                    extracted_pixels.append(pixel)
-                    if len(extracted_pixels) == self.K:
-                        break
-            self.centroids = np.array(extracted_pixels)
-        elif self.options['km_init'] == 'random':
-            unique_pixels = set()
-            extracted_pixels = []
-            np.random.shuffle(self.X)
-            for pixel in self.X:
-                pixel_tuple = tuple(pixel)
-                if pixel_tuple not in unique_pixels:
-                    unique_pixels.add(pixel_tuple)
-                    extracted_pixels.append(pixel)
-                    if len(extracted_pixels) == self.K:
-                        break
-            self.centroids = np.array(extracted_pixels)
+            if self.options['km_init'] == 'first':
+                unique_pixels = set()
+                extracted_pixels = []
+                for pixel in self.X:
+                    pixel_tuple = tuple(pixel)
+                    if pixel_tuple not in unique_pixels:
+                        unique_pixels.add(pixel_tuple)
+                        extracted_pixels.append(pixel)
+                        if len(extracted_pixels) == self.K:
+                            break
+                self.centroids = np.array(extracted_pixels)
+            elif self.options['km_init'] == 'random':
+                unique_pixels = set()
+                extracted_pixels = []
+                np.random.shuffle(self.X)
+                for pixel in self.X:
+                    pixel_tuple = tuple(pixel)
+                    if pixel_tuple not in unique_pixels:
+                        unique_pixels.add(pixel_tuple)
+                        extracted_pixels.append(pixel)
+                        if len(extracted_pixels) == self.K:
+                            break
+                self.centroids = np.array(extracted_pixels)
 
-        elif self.options['km_init'] == 'custom': 
-            unique_pixels = set()
-            extracted_pixels = []
-            np.random.shuffle(self.X)
-            for pixel in self.X:
-                pixel_tuple = tuple(pixel)
-                if pixel_tuple not in unique_pixels:
-                    unique_pixels.add(pixel_tuple)
-                    extracted_pixels.append(pixel)
-                    if len(extracted_pixels) == self.K:
-                        break
-            self.centroids = np.array(extracted_pixels)
+            elif self.options['km_init'] == 'custom': 
+                unique_pixels = set()
+                extracted_pixels = []
+                np.random.shuffle(self.X)
+                for pixel in self.X:
+                    pixel_tuple = tuple(pixel)
+                    if pixel_tuple not in unique_pixels:
+                        unique_pixels.add(pixel_tuple)
+                        extracted_pixels.append(pixel)
+                        if len(extracted_pixels) == self.K:
+                            break
+                self.centroids = np.array(extracted_pixels)
 
-        else:
-            pass
+            else:
+                pass
 
     def get_labels(self):
         """
@@ -197,9 +197,9 @@ class KMeans:
 
     def find_bestK(self, max_K):
         """
-         Sets the best k analyzing the results up to 'max_K' clusters
+        Sets the best k analyzing the results up to 'max_K' clusters
 
-         Args:
+        Args:
                 max_k (int): maximum K value to test against
         """
         # Apply K-Means for the first time with K = 2
@@ -243,7 +243,8 @@ def distance(X, C):
         dist: PxK numpy array position ij is the distance between the
         i-th point of the first set an the j-th point of the second set
     """
-    return np.sqrt(np.sum((X[:, np.newaxis] - C) ** 2, axis=2))
+    return np.linalg.norm(X[:, np.newaxis] - C, axis=2)
+
 
 
 def get_colors(centroids):
