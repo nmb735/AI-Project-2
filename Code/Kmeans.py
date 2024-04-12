@@ -63,7 +63,7 @@ class KMeans:
 
         ##  THIS FUNCTION CAN BE MODIFIED FROM THIS POINT, if needed
 
-    def _init_centroids(self):
+   def _init_centroids(self):
         """
         Initialization of centroids for K-Means algorithm
         Args:
@@ -86,13 +86,33 @@ class KMeans:
             self.centroids = np.array(extracted_pixels)
         elif self.options['km_init'] == 'random':
             unique_pixels = set()
-            while len(unique_pixels) < self.K:
-                pixel = tuple(np.random.randint(0, pixel_rep_const, size=(self.X.shape[1])))
-                unique_pixels.add(pixel)
-            self.centroids = np.array(list(unique_pixels))
+            extracted_pixels = []
+            print(self.X[1])
+            np.random.shuffle(self.X)
+            print(self.X[1])
+            for pixel in self.X:
+                pixel_tuple = tuple(pixel)
+                if pixel_tuple not in unique_pixels:
+                    unique_pixels.add(pixel_tuple)
+                    extracted_pixels.append(pixel)
+                    if len(extracted_pixels) == self.K:
+                        break
+            self.centroids = np.array(extracted_pixels)
 
-        elif self.options['km_init'] == 'custom': # Custom initialization: random, duplicates allowed
-            self.centroids = np.random.randint(0, pixel_rep_const, size=(self.K, self.X.shape[1]))
+        elif self.options['km_init'] == 'custom': 
+            unique_pixels = set()
+            extracted_pixels = []
+            print(self.X[1])
+            np.random.shuffle(self.X)
+            print(self.X[1])
+            for pixel in self.X:
+                pixel_tuple = tuple(pixel)
+                if pixel_tuple not in unique_pixels:
+                    unique_pixels.add(pixel_tuple)
+                    extracted_pixels.append(pixel)
+                    if len(extracted_pixels) == self.K:
+                        break
+            self.centroids = np.array(extracted_pixels)
 
         else:
             pass
