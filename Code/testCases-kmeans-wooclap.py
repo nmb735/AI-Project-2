@@ -3,7 +3,7 @@ from Kmeans import __authors__, __group__, KMeans, distance, get_colors
 from PIL import Image
 import numpy as np
 
-test_folder = 'testCases_img/'
+test_folder = './testCases_img/'
 
 def read_image(image_filename):
     image_path = test_folder + image_filename

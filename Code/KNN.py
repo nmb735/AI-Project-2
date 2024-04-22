@@ -1,5 +1,5 @@
-__authors__ = 'TO_BE_FILLED'
-__group__ = 'TO_BE_FILLED'
+__authors__ = ['1632368', '1632367', '1632823']
+__group__ = ''
 
 import numpy as np
 import math
@@ -17,9 +17,11 @@ class KNN:
 
     def _init_train(self, train_data):
         """
-        initializes the train data
-        :param train_data: PxMxNx3 matrix corresponding to P color images
-        :return: assigns the train set to the matrix self.train_data shaped as PxD (P points in a D dimensional space)
+        Initializes the train data
+        Args:
+            train_data: PxMxNx3 matrix corresponding to P color images
+        Return: 
+            assigns the train set to the matrix self.train_data shaped as PxD (P points in a D dimensional space)
         """
         #######################################################
         ##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
@@ -29,10 +31,12 @@ class KNN:
 
     def get_k_neighbours(self, test_data, k):
         """
-        given a test_data matrix calculates de k nearest neighbours at each point (row) of test_data on self.neighbors
-        :param test_data: array that has to be shaped to a NxD matrix (N points in a D dimensional space)
-        :param k: the number of neighbors to look at
-        :return: the matrix self.neighbors is created (NxK)
+        Given a test_data matrix calculates de k nearest neighbours at each point (row) of test_data on self.neighbors
+        Args:
+            test_data: array that has to be shaped to a NxD matrix (N points in a D dimensional space)
+            k: the number of neighbors to look at
+        Return:
+            the matrix self.neighbors is created (NxK)
                  the ij-th entry is the j-th nearest train point to the i-th test point
         """
         #######################################################
@@ -44,7 +48,10 @@ class KNN:
     def get_class(self):
         """
         Get the class by maximum voting
-        :return: 1 array of Nx1 elements. For each of the rows in self.neighbors gets the most voted value
+        Args:
+            None
+        Return:
+            1 array of Nx1 elements. For each of the rows in self.neighbors gets the most voted value
                 (i.e. the class at which that row belongs)
         """
         #######################################################
@@ -55,10 +62,12 @@ class KNN:
 
     def predict(self, test_data, k):
         """
-        predicts the class at which each element in test_data belongs to
-        :param test_data: array that has to be shaped to a NxD matrix (N points in a D dimensional space)
-        :param k: the number of neighbors to look at
-        :return: the output form get_class a Nx1 vector with the predicted shape for each test image
+        Predicts the class at which each element in test_data belongs to
+        Args:
+            test_data: array that has to be shaped to a NxD matrix (N points in a D dimensional space)
+            k: the number of neighbors to look at
+        Return:
+            the output form get_class a Nx1 vector with the predicted shape for each test image
         """
 
         self.get_k_neighbours(test_data, k)
