@@ -5,6 +5,7 @@ import numpy as np
 import math
 import operator
 from scipy.spatial.distance import cdist
+from utils import rgb2gray
 
 
 class KNN:
@@ -23,12 +24,13 @@ class KNN:
         Return: 
             assigns the train set to the matrix self.train_data shaped as PxD (P points in a D dimensional space)
         """
-        #######################################################
-        ##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
-        ##  AND CHANGE FOR YOUR OWN CODE
-        #######################################################
-        self.train_data = np.random.randint(8, size=[10, 4800])
-
+        if len(train_data.shape) == 3:
+            # Already in Grayscale
+            if train_data.shape[-1] == 3:
+                # If RGB, convert to grayscale
+                train_data = rgb2gray(train_data)
+            self.train_data = np.array(train_data.reshape((train_data.shape[0], -1)), dtype="float")
+            
     def get_k_neighbours(self, test_data, k):
         """
         Given a test_data matrix calculates de k nearest neighbours at each point (row) of test_data on self.neighbors
