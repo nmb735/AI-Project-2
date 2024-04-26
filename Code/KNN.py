@@ -5,7 +5,7 @@ import numpy as np
 import math
 import operator
 from scipy.spatial.distance import cdist
-from utils import rgb2gray
+from utils import rgb2gray # Not sure if we can import
 
 
 class KNN:
@@ -26,9 +26,9 @@ class KNN:
         """
         if len(train_data.shape) == 3:
             # Already in Grayscale
-            if train_data.shape[-1] == 3:
-                # If RGB, convert to grayscale
-                train_data = rgb2gray(train_data)
+            if train_data.shape[-1] == 3: # Not sure if we can import
+                # If RGB, convert to grayscale # Not sure if we can import
+                train_data = rgb2gray(train_data) # Not sure if we can import
             self.train_data = np.array(train_data.reshape((train_data.shape[0], -1)), dtype="float")
             
     def get_k_neighbours(self, test_data, k):
