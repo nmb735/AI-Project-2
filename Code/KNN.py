@@ -33,19 +33,42 @@ class KNN:
             
     def get_k_neighbours(self, test_data, k):
         """
-        Given a test_data matrix calculates de k nearest neighbours at each point (row) of test_data on self.neighbors
-        Args:
-            test_data: array that has to be shaped to a NxD matrix (N points in a D dimensional space)
-            k: the number of neighbors to look at
-        Return:
-            the matrix self.neighbors is created (NxK)
+        given a test_data matrix calculates de k nearest neighbours at each point (row) of test_data on self.neighbors
+        :param test_data: array that has to be shaped to a NxD matrix (N points in a D dimensional space)
+        :param k: the number of neighbors to look at
+        :return: the matrix self.neighbors is created (NxK)
                  the ij-th entry is the j-th nearest train point to the i-th test point
         """
         #######################################################
         ##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
         ##  AND CHANGE FOR YOUR OWN CODE
         #######################################################
-        self.neighbors = np.random.randint(k, size=[test_data.shape[0], k])
+        
+        ###Section 1: Reshape to (#images, 80p*60p)
+        #print(test_data.shape) #(10, 80, 60)
+        #Reshape test data (same as train data)
+        if len(test_data.shape) == 3:
+            # Already in Grayscale
+            if test_data.shape[-1] == 3: # Not sure if we can import
+                # If RGB, convert to grayscale # Not sure if we can import
+                test_data = rgb2gray(test_data) # Not sure if we can import
+            self.test_data = np.array(test_data.reshape((test_data.shape[0], -1)), dtype="float")
+        #print(self.test_data.shape)#expected: (10, 4800) V
+        
+        ###Section 2: Distances
+        distances = cdist(self.test_data, self.train_data, metric="euclidean")
+        #print(distances)#not sure if they are correct
+        
+        ###Section 3: first neighbours
+        #print(self.labels[1])
+        neighbors = []
+        for dist in distances:
+            k_min_index = np.argsort(dist)[:k]
+            #print(k_min_index)
+            neighbors.append(self.labels[k_min_index])
+            #print(self.labels[k_min_index])
+        
+        self.neighbors = neighbors
 
     def get_class(self):
         """
