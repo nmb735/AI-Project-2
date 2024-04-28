@@ -1,5 +1,5 @@
 __authors__ = ['1632368', '1632367', '1632823']
-__group__ = ''
+__group__ = '172'
 
 import numpy as np
 import math
@@ -12,9 +12,6 @@ class KNN:
     def __init__(self, train_data, labels):
         self._init_train(train_data)
         self.labels = np.array(labels)
-        #############################################################
-        ##  THIS FUNCTION CAN BE MODIFIED FROM THIS POINT, if needed
-        #############################################################
 
     def _init_train(self, train_data):
         """
@@ -39,11 +36,6 @@ class KNN:
         :return: the matrix self.neighbors is created (NxK)
                  the ij-th entry is the j-th nearest train point to the i-th test point
         """
-        #######################################################
-        ##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
-        ##  AND CHANGE FOR YOUR OWN CODE
-        #######################################################
-        
         ###Section 1: Reshape to (#images, 80p*60p)
         #print(test_data.shape) #(10, 80, 60)
         #Reshape test data (same as train data)
@@ -79,10 +71,6 @@ class KNN:
             1 array of Nx1 elements. For each of the rows in self.neighbors gets the most voted value
                 (i.e. the class at which that row belongs)
         """
-        #######################################################
-        ##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
-        ##  AND CHANGE FOR YOUR OWN CODE
-        #######################################################
         #m = max elements
         #c = neighbour class
         
