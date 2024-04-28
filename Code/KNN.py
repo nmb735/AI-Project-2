@@ -83,7 +83,20 @@ class KNN:
         ##  YOU MUST REMOVE THE REST OF THE CODE OF THIS FUNCTION
         ##  AND CHANGE FOR YOUR OWN CODE
         #######################################################
-        return np.random.randint(10, size=self.neighbors.size), np.random.random(self.neighbors.size)
+        #m = max elements
+        #c = neighbour class
+        
+        neighbour_class = []    
+        for neighbors in self.neighbors:
+            #buscamos las clases sin repeticiones, los indices de cada clase y la cantidad de veces que se repite cada clase
+            clas, index, inverse, counts = np.unique(neighbors, return_index=True, return_inverse=True, return_counts=True)
+            #posiciones donde count es maximo
+            m = np.where(counts == np.max(counts))[0]
+            #cojemos el neighbor con el indice mas pequeño de entre los que count es maximo
+            c = neighbors[index[m].min()]
+            #añadimos a la lista
+            neighbour_class.append(c)
+        return np.array(neighbour_class)
 
     def predict(self, test_data, k):
         """
