@@ -68,7 +68,7 @@ class KNN:
             neighbors.append(self.labels[k_min_index])
             #print(self.labels[k_min_index])
         
-        self.neighbors = neighbors
+        self.neighbors = np.array(neighbors)
 
     def get_class(self):
         """
