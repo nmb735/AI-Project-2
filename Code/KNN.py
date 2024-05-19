@@ -27,6 +27,23 @@ class KNN:
                 # If RGB, convert to grayscale # Not sure if we can import
                 train_data = rgb2gray(train_data) # Not sure if we can import
             self.train_data = np.array(train_data.reshape((train_data.shape[0], -1)), dtype="float")
+
+    def _init_train_flip(self, train_data):
+        """
+        Initializes the train data
+        Args:
+            train_data: PxMxNx3 matrix corresponding to P color images
+        Return: 
+            assigns the train set (flipped horizontally) to the matrix self.train_data shaped as PxD (P points in a D dimensional space)
+        """
+        if len(train_data.shape) == 3:
+            # Already in Grayscale
+            if train_data.shape[-1] == 3: 
+                # If RGB, convert to grayscale 
+                train_data = rgb2gray(train_data) 
+            # Flip the images horizontally
+            train_data = np.flip(train_data, axis=1)
+            self.train_data = np.array(train_data.reshape((train_data.shape[0], -1)), dtype="float")
             
     def get_k_neighbours(self, test_data, k):
         """
