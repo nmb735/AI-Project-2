@@ -8,62 +8,7 @@ import Kmeans as Km
 from KNN import *
 import KNN as knn
 
-#########################################################################################
-# Quality analysis functions
-#########################################################################################
-def Retrieval_by_color(imgs, kmeans_color_labels, searched_color_s):
-    found_imgs = []
-    for image, color_label in zip(imgs, kmeans_color_labels):
-        found_vector = np.isin(searched_color_s, color_label)
-        found_bool = np.isin([True], found_vector)
-        if found_bool[0]:
-            found_imgs.append(image)
-    found_imgs = np.array(found_imgs)
-    return found_imgs
 
-def Retrieval_by_shape(imgs, knn_shape_labels, searched_shape_s):
-    found_imgs = []
-    for index, image in enumerate(imgs):
-        #print(searched_shape_s)
-        found_vector = np.isin(searched_shape_s, knn_shape_labels[index]) 
-        #print(found_vector)
-        found_bool = np.isin([True], found_vector)
-        #print(found_bool)
-        if found_bool:
-            found_imgs.append(image)
-    found_imgs = np.array(found_imgs)
-    return found_imgs
-
-def Retrieval_combined(imgs, kmeans_color_labels, knn_shape_labels, searched_color_s, searched_shape_s):
-    found_imgs = []
-    new_shape_labels = []
-    for image, color_label, shape_label in zip(imgs, kmeans_color_labels, knn_shape_labels):
-        found_vector = np.isin(searched_color_s, color_label)
-        found_bool = np.isin([True], found_vector)
-        if found_bool[0]:
-            found_imgs.append(image)
-            new_shape_labels.append(shape_label)
-    mid_search = np.array(found_imgs)
-    new_shape_labels = np.array(new_shape_labels)
-    #print(new_shape_labels)
-    #visualize_retrieval(mid_search, mid_search.shape[0])
-    final_search = Retrieval_by_shape(mid_search, new_shape_labels, searched_shape_s)
-    return final_search
-
-
-############################################################################################################
-# Quantitive analysis functions
-############################################################################################################
-def Kmean_statistics():
-    pass
-
-def Get_shape_accuracy(shape_results, ground_truth):
-    #return (np.sum(shape_results == ground_truth) / len(ground_truth)) * 100
-    pass
-
-def Get_color_accuracy(color_results, ground_truth):
-    pass
-    
 if __name__ == '__main__':
 
     # Load all the images and GT
@@ -77,6 +22,46 @@ if __name__ == '__main__':
     imgs, class_labels, color_labels, upper, lower, background = read_extended_dataset()
     cropped_images = crop_images(imgs, upper, lower)
 
+    # You can start coding your functions here
+    def Retrieval_by_color(imgs, kmeans_color_labels, searched_color_s):
+        found_imgs = []
+        for image, color_label in zip(imgs, kmeans_color_labels):
+            found_vector = np.isin(searched_color_s, color_label)
+            found_bool = np.isin([True], found_vector)
+            if found_bool[0]:
+                found_imgs.append(image)
+        found_imgs = np.array(found_imgs)
+        return found_imgs
+    
+    def Retrieval_by_shape(imgs, knn_shape_labels, searched_shape_s):
+        found_imgs = []
+        for index, image in enumerate(imgs):
+            #print(searched_shape_s)
+            found_vector = np.isin(searched_shape_s, knn_shape_labels[index]) 
+            #print(found_vector)
+            found_bool = np.isin([True], found_vector)
+            #print(found_bool)
+            if found_bool:
+                found_imgs.append(image)
+        found_imgs = np.array(found_imgs)
+        return found_imgs
+    
+    def Retrieval_combined(imgs, kmeans_color_labels, knn_shape_labels, searched_color_s, searched_shape_s):
+        found_imgs = []
+        new_shape_labels = []
+        for image, color_label, shape_label in zip(imgs, kmeans_color_labels, knn_shape_labels):
+            found_vector = np.isin(searched_color_s, color_label)
+            found_bool = np.isin([True], found_vector)
+            if found_bool[0]:
+                found_imgs.append(image)
+                new_shape_labels.append(shape_label)
+        mid_search = np.array(found_imgs)
+        new_shape_labels = np.array(new_shape_labels)
+        #print(new_shape_labels)
+        #visualize_retrieval(mid_search, mid_search.shape[0])
+        final_search = Retrieval_by_shape(mid_search, new_shape_labels, searched_shape_s)
+        return final_search
+    
     '''
     # Define two arrays
     array1 = np.array([1, 2, 3, 4, 5])
@@ -86,11 +71,11 @@ if __name__ == '__main__':
     result = np.isin(array1, array2)
     xd = np.isin([True], result)
     print(xd[0])
-
+    
     if xd[0]:
         print('xd')
     '''
-
+    
     #    SET Kmeans 
     colors_labels_list = []
 
@@ -102,7 +87,7 @@ if __name__ == '__main__':
     #print(colors_labels_list)
     #print(cropped_images.shape)
     #print(colors_labels_list.shape)
-
+    
     #    SET KNN 
     #print(train_imgs.shape)
     #knn = KNN(train_imgs, train_class_labels)
@@ -115,9 +100,13 @@ if __name__ == '__main__':
     #print(shape_labels_list)
     #print(cropped_images.shape)
     #print(shape_labels_list.shape)
-
+    
+    
+    
+    
+    
     # TEST: Retrieval_by_color
-    '''
+    
     searched_color_s = ['Blue', 'Red'] #modify this array for testing
     searched_color_s = np.array(searched_color_s)
     found_imgs = Retrieval_by_color(cropped_images, colors_labels_list, searched_color_s)
@@ -125,8 +114,8 @@ if __name__ == '__main__':
     #count = np.sum(colors_labels_list == 'Blue')
     #print(count)
     visualize_retrieval(found_imgs, found_imgs.shape[0])
-    '''
-
+    
+    
     # TEST: Retrieval_by_shape
     '''
     searched_shape_s = ['Sandals'] #modify this array for testing
@@ -137,7 +126,7 @@ if __name__ == '__main__':
     #print(count)
     visualize_retrieval(found_imgs, found_imgs.shape[0])
     '''
-
+    
     # TEST: Retrieval_combined
     '''
     searched_color_s = ['Black'] #modify this array for testing
@@ -147,6 +136,9 @@ if __name__ == '__main__':
     found_imgs = Retrieval_combined(imgs, colors_labels_list, shape_labels_list, searched_color_s, searched_shape_s)
     visualize_retrieval(found_imgs, found_imgs.shape[0])
     '''
-
-    # TEST: Get_shape_accuracy
-    print(Get_shape_accuracy(shape_labels_list, class_labels))
+    
+    
+    
+    
+    
+    
