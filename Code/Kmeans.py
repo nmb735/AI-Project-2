@@ -193,6 +193,68 @@ class KMeans:
         WCD = WCD / len(self.X)
         self.WCD = WCD
         return WCD 
+
+    def inter_class(self):
+        D = 0
+        for i in range(self.K):
+            for j in range(i+1, self.K,1):
+                # Calculate the distance between the next element and the centroid
+                distances = self.centroids[i]-self.centroids[j]
+
+                # Elevate this value to the square
+                distancesE2 = np.power(distances, 2)
+
+                # Sum by row
+                distance = np.sum(distancesE2)
+
+                # Sum all the distances
+                D += np.sum(distance)
+        
+        # Divide by the number of elements
+        D = D / self.K
+        self.inter_clas = D
+        return D
+    
+    def fisher(self):
+        self.fish = self.WCD/self.inter_clas
+        return self.fish
+    
+    def bestK_fisher(self, max_K):
+        # Apply K-Means for the first time with K = 2
+        self.K = 2
+        self.fit()
+        
+        #Calculate WCD of K = 2
+        self.withinClassDistance()
+        self.inter_class()
+        f_ant = self.fisher()
+        print(f_ant)
+        
+        i = 2 #=K
+        # Execute the loop until we find the optimal K or we exceed the maximum K
+        F = 0
+        while (i < max_K) and ((100-F) >= 20):
+            i += 1
+            # Apply K-Means with K to compare with K-Means with K-1
+            self.K = i
+            self.fit()
+            
+            # Calculate WCD of K
+            self.withinClassDistance()
+            self.inter_class()
+            f = self.fisher()
+            print(f)
+            
+            F = 100*(f/f_ant)
+            f_ant = f
+            
+        if (i != max_K):
+            self.K = i-1
+            self.fit()
+            return i
+        # If we have not found an optimal K, we must return the maximum K
+        else:
+            return max_K
     
     def find_bestK(self, max_K):
         """
