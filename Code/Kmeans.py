@@ -99,17 +99,19 @@ class KMeans:
                             break
                 self.centroids = np.array(extracted_pixels)
 
-            elif self.options['km_init'] == 'custom': 
+           elif self.options['km_init'] == 'custom': 
                 unique_pixels = set()
                 extracted_pixels = []
-                np.random.shuffle(self.X)
-                for pixel in self.X:
-                    pixel_tuple = tuple(pixel)
+                i = 0
+                c = 0
+                while i < len(self.X) and c < self.K:
+                    pixel_tuple = tuple(self.X[i])
                     if pixel_tuple not in unique_pixels:
                         unique_pixels.add(pixel_tuple)
                         extracted_pixels.append(pixel)
-                        if len(extracted_pixels) == self.K:
-                            break
+                        c = c + 1
+                        i = c * (len(self.X)/self.K)
+                    i = i + 1
                 self.centroids = np.array(extracted_pixels)
 
             else:
