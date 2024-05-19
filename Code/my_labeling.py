@@ -13,6 +13,17 @@ import time
 # Quality analysis functions
 #########################################################################################
 def Retrieval_by_color(imgs, kmeans_color_labels, searched_color_s):
+    """
+    Retrieves images from a list based on their color labels.
+
+    Args:
+        imgs (list): A list of images to search through.
+        kmeans_color_labels (list): A list of K-means color labels corresponding to the images.
+        searched_color_s (list): A list of color labels to search for.
+
+    Returns:
+        np.array: An array of images that contain any of the colors in `searched_color_s`.
+    """
     found_imgs = []
     for image, color_label in zip(imgs, kmeans_color_labels):
         found_vector = np.isin(searched_color_s, color_label)
@@ -23,19 +34,41 @@ def Retrieval_by_color(imgs, kmeans_color_labels, searched_color_s):
     return found_imgs
 
 def Retrieval_by_shape(imgs, knn_shape_labels, searched_shape_s):
+    """
+    Retrieves images from a list based on their shape labels.
+
+    Args:
+        imgs (list): A list of images to search through.
+        knn_shape_labels (list): A list of KNN shape labels corresponding to the images.
+        searched_shape_s (list): A list of shape labels to search for.
+
+    Returns:
+        np.array: An array of images that contain any of the shapes in `searched_shape_s`.
+    """
+
     found_imgs = []
     for index, image in enumerate(imgs):
-        #print(searched_shape_s)
         found_vector = np.isin(searched_shape_s, knn_shape_labels[index]) 
-        #print(found_vector)
         found_bool = np.isin([True], found_vector)
-        #print(found_bool)
         if found_bool:
             found_imgs.append(image)
     found_imgs = np.array(found_imgs)
     return found_imgs
 
 def Retrieval_combined(imgs, kmeans_color_labels, knn_shape_labels, searched_color_s, searched_shape_s):
+    """
+    Retrieves images from a list based on their color and shape labels.
+
+    Args:
+        imgs (list): A list of images to search through.
+        kmeans_color_labels (list): A list of K-means color labels corresponding to the images.
+        knn_shape_labels (list): A list of KNN shape labels corresponding to the images.
+        searched_color_s (list): A list of color labels to search for.
+        searched_shape_s (list): A list of shape labels to search for.
+
+    Returns:
+        np.array: An array of images that contain any of the colors in `searched_color_s` and any of the shapes in `searched_shape_s`.
+    """
     found_imgs = []
     new_shape_labels = []
     for image, color_label, shape_label in zip(imgs, kmeans_color_labels, knn_shape_labels):
@@ -46,17 +79,27 @@ def Retrieval_combined(imgs, kmeans_color_labels, knn_shape_labels, searched_col
             new_shape_labels.append(shape_label)
     mid_search = np.array(found_imgs)
     new_shape_labels = np.array(new_shape_labels)
-    #print(new_shape_labels)
-    #visualize_retrieval(mid_search, mid_search.shape[0])
     final_search = Retrieval_by_shape(mid_search, new_shape_labels, searched_shape_s)
     return final_search
 
 
 ############################################################################################################
-# Quantitive analysis functions
+# Quantitative analysis functions
 ############################################################################################################
 def Kmean_statistics(img, k_max, options=None):
-    # Initialize three arrays to store the values of the WCD, the time and the number of iterations for each element of k (from 2 to k_max)
+    """
+    Computes and plots the statistics for K-Means clustering on a set of images.
+
+    Args:
+        img (list): A list of images to perform K-Means clustering on.
+        k_max (int): The maximum number of clusters to consider.
+        options (dict, optional): A dictionary of options to pass to the KMeans constructor. Defaults to None.
+
+    Returns:
+        tuple: A tuple containing three NumPy arrays. The first array contains the average time taken for each value of k, 
+               the second contains the average within-class distance for each value of k, 
+               and the third contains the average number of iterations for each value of k.
+    """
     k_time_axis = np.zeros(k_max - 1)
     k_wcd_axis = np.zeros(k_max - 1)
     k_iterations_axis = np.zeros(k_max - 1)
@@ -72,7 +115,6 @@ def Kmean_statistics(img, k_max, options=None):
             k_wcd_axis[k-2] += kmeans.withinClassDistance()
             k_iterations_axis[k-2] += kmeans.num_iterations
 
-    # Divide by the number of images to get the average
     k_time_axis /= n_images
     k_wcd_axis /= n_images
     k_iterations_axis /= n_images
@@ -107,12 +149,34 @@ def Kmean_statistics(img, k_max, options=None):
     return k_time_axis, k_wcd_axis, k_iterations_axis
     
 def Get_shape_accuracy(shape_results, ground_truth):
+    """
+    Calculates the accuracy of shape predictions.
+
+    Args:
+        shape_results (np.array): An array of predicted shape labels.
+        ground_truth (np.array): An array of ground truth shape labels.
+
+    Returns:
+        float: The accuracy of the shape predictions, in percent.
+    """
     return (np.sum(shape_results == ground_truth) / len(ground_truth)) * 100
-    
+
 def Get_color_accuracy(color_results, ground_truth):
-    # 100% correct --> +1
-    # x% correct --> +x/y
-    # TOTAL = sum / total_length
+    """
+    Calculates the accuracy of color predictions.
+
+    This function compares the predicted color labels (`color_results`) with the ground truth labels (`ground_truth`).
+    It calculates the accuracy as the percentage of correct predictions, with partial credit given for partially correct predictions.
+    The function also calculates the mean number of colors per image in the ground truth.
+
+    Args:
+        color_results (list): A list of predicted color labels. Each label is a list of colors.
+        ground_truth (list): A list of ground truth color labels. Each label is a list of colors.
+
+    Returns:
+        tuple: A tuple containing two floats. The first is the accuracy of the color predictions, in percent. 
+               The second is the mean number of colors per image in the ground truth.
+    """
     correct = 0
     for color, gt in zip(color_results, ground_truth):
         clr = color[0]
