@@ -198,7 +198,7 @@ def Get_color_accuracy(color_results, ground_truth):
     mean = np.mean([len(gt) for gt in ground_truth])
     return ((correct / len(ground_truth)) * 100), mean
 
-def Get_total_accuracy(shape_results, color_results, ground_truth):
+def Get_total_accuracy(shape_results, color_results, ground_truth_shape, ground_truth_color):
     """
     Calculates the total accuracy of shape and color predictions.
 
@@ -212,10 +212,48 @@ def Get_total_accuracy(shape_results, color_results, ground_truth):
     Returns:
         float: The total accuracy of the predictions, in percent.
     """
-    shape_accuracy = Get_shape_accuracy(shape_results, ground_truth[0])
-    color_accuracy = Get_color_accuracy(color_results, ground_truth[1])[0]
+    shape_accuracy = Get_shape_accuracy(shape_results, ground_truth_shape)
+    color_accuracy = Get_color_accuracy(color_results, ground_truth_color)
     return (shape_accuracy + color_accuracy) / 2
+
+#########################################################################################
+# Testing Function
+#########################################################################################
+def testing():
+    time_list = []
+    total_accuracy_list = []
+    shape_accuracy_list = []
+    color_accuracy_list = []
+
+    number_of_iterations = 5
+
+    for i in range(number_of_iterations):
+        start_time = time.time()
+        # SET Kmeans 
+        colors_labels_list = []
+        for img in cropped_images:
+            km = KMeans(img)
+            km.fit()
+            colors_labels_list.append(get_colors(km.centroids))
+            colors_labels_list = np.array(colors_labels_list)
+        # SET KNN 
+        train_imgs = train_imgs.reshape(train_imgs.shape[0], train_imgs.shape[1], train_imgs.shape[2] * train_imgs.shape[3])
+        imgsknn = imgs.reshape(imgs.shape[0], imgs.shape[1], imgs.shape[2] * imgs.shape[3])
+        knn = KNN(train_imgs, train_class_labels)
+        shape_labels_list = knn.predict(imgsknn, 3)
+
+        end_time = time.time()
+        time_list.append(end_time - start_time)
+        total_accuracy_list.append(Get_total_accuracy(shape_labels_list, colors_labels_list, class_labels, color_labels))
+        shape_accuracy_list.append(Get_shape_accuracy(shape_labels_list, class_labels))
+        color_accuracy_list.append(Get_color_accuracy(colors_labels_list, color_labels))
     
+    for i in zip(time_list, total_accuracy_list, shape_accuracy_list, color_accuracy_list):
+        print(f"Execution {i+1}")
+        print(f"Time: {i[0]}\nTotal Accuracy: {i[1]}\nShape Accuracy: {i[2]}\nColor Accuracy: {i[3]}\n")
+    
+    print(f"Average Time: {np.mean(time_list)}\nAverage Total Accuracy: {np.mean(total_accuracy_list)}\nAverage Shape Accuracy: {np.mean(shape_accuracy_list)}\nAverage Color Accuracy: {np.mean(color_accuracy_list)}\n")
+
 if __name__ == '__main__':
 
     # Load all the images and GT
