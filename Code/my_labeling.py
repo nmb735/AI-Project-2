@@ -197,7 +197,24 @@ def Get_color_accuracy(color_results, ground_truth):
                 correct += 1
     mean = np.mean([len(gt) for gt in ground_truth])
     return ((correct / len(ground_truth)) * 100), mean
- 
+
+def Get_total_accuracy(shape_results, color_results, ground_truth):
+    """
+    Calculates the total accuracy of shape and color predictions.
+
+    This function calculates the total accuracy as the average of the shape accuracy and color accuracy.
+
+    Args:
+        shape_results (np.array): An array of predicted shape labels.
+        color_results (list): A list of predicted color labels. Each label is a list of colors.
+        ground_truth (tuple): A tuple containing the ground truth shape labels and color labels.
+
+    Returns:
+        float: The total accuracy of the predictions, in percent.
+    """
+    shape_accuracy = Get_shape_accuracy(shape_results, ground_truth[0])
+    color_accuracy = Get_color_accuracy(color_results, ground_truth[1])[0]
+    return (shape_accuracy + color_accuracy) / 2
     
 if __name__ == '__main__':
 
