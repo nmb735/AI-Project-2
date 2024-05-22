@@ -219,71 +219,16 @@ def Get_total_accuracy(shape_results, color_results, ground_truth_shape, ground_
 #########################################################################################
 # Testing Function
 #########################################################################################
-def testing(train_imgs):
+def testing(train_imgs): # Modify this function for testing - General Template
     time_list = []
     total_accuracy_list = []
     shape_accuracy_list = []
     color_accuracy_list = []
-
-    number_of_iterations = 5
-
-    for i in range(number_of_iterations):
-        start_time = time.time()
-        # SET Kmeans 
-        colors_labels_list = []
-        for img in cropped_images:
-            km = KMeans(img)
-            km.fit()
-            colors_labels_list.append(get_colors(km.centroids))
-        colors_labels_list = np.array(colors_labels_list)
-        # SET KNN 
-        train_imgs = train_imgs.reshape(train_imgs.shape[0], train_imgs.shape[1], train_imgs.shape[2] * train_imgs.shape[3])
-        imgsknn = imgs.reshape(imgs.shape[0], imgs.shape[1], imgs.shape[2] * imgs.shape[3])
-        knn = KNN(train_imgs, train_class_labels)
-        shape_labels_list = knn.predict(imgsknn, 3)
-
-        end_time = time.time()
-        time_list.append(end_time - start_time)
-        total_accuracy_list.append(Get_total_accuracy(shape_labels_list, colors_labels_list, class_labels, color_labels))
-        shape_accuracy_list.append(Get_shape_accuracy(shape_labels_list, class_labels))
-        color_accuracy_list.append(Get_color_accuracy(colors_labels_list, color_labels))
-    
-    for i in zip(time_list, total_accuracy_list, shape_accuracy_list, color_accuracy_list):
-        print(f"Execution {i+1}")
-        print(f"Time: {i[0]}\nTotal Accuracy: {i[1]}\nShape Accuracy: {i[2]}\nColor Accuracy: {i[3]}\n")
-    
-    print(f"Average Time: {np.mean(time_list)}\nAverage Total Accuracy: {np.mean(total_accuracy_list)}\nAverage Shape Accuracy: {np.mean(shape_accuracy_list)}\nAverage Color Accuracy: {np.mean(color_accuracy_list)}\n")
-
-if __name__ == '__main__':
-
-    # Load all the images and GT
-    train_imgs, train_class_labels, train_color_labels, test_imgs, test_class_labels, \
-        test_color_labels = read_dataset(root_folder='./images/', gt_json='./images/gt.json')
-
-    # List with all the existent classes
-    classes = list(set(list(train_class_labels) + list(test_class_labels)))
-
-    # Load extended ground truth
-    imgs, class_labels, color_labels, upper, lower, background = read_extended_dataset()
-    cropped_images = crop_images(imgs, upper, lower)
-
-
-    #testing(train_imgs)
-    
-    time_list = []
-    total_accuracy_list = []
-    shape_accuracy_list = []
-    color_accuracy_list = []
-
-    options = {'km_init':'custom'}
-
-
     start_time = time.time()
     # SET Kmeans 
     colors_labels_list = []
     for img in cropped_images:
-        km = KMeans(img,1,options)
-        km.find_bestK(10)
+        km = KMeans(img)
         km.fit()
         colors_labels_list.append(get_colors(km.centroids))
     colors_labels_list = np.array(colors_labels_list)
@@ -298,13 +243,24 @@ if __name__ == '__main__':
     total_accuracy_list.append(Get_total_accuracy(shape_labels_list, colors_labels_list, class_labels, color_labels))
     shape_accuracy_list.append(Get_shape_accuracy(shape_labels_list, class_labels))
     color_accuracy_list.append(Get_color_accuracy(colors_labels_list, color_labels))
-    
+
     for i in zip(time_list, total_accuracy_list, shape_accuracy_list, color_accuracy_list):
-        print(f"#######################################")
+        print(f"Execution {i+1}")
         print(f"Time: {i[0]}\nTotal Accuracy: {i[1]}\nShape Accuracy: {i[2]}\nColor Accuracy: {i[3]}\n")
-        print(f"#######################################")
-  
-    """
+    
+
+if __name__ == '__main__':
+
+    # Load all the images and GT
+    train_imgs, train_class_labels, train_color_labels, test_imgs, test_class_labels, \
+        test_color_labels = read_dataset(root_folder='./images/', gt_json='./images/gt.json')
+
+    # List with all the existent classes
+    classes = list(set(list(train_class_labels) + list(test_class_labels)))
+
+    # Load extended ground truth
+    imgs, class_labels, color_labels, upper, lower, background = read_extended_dataset()
+    cropped_images = crop_images(imgs, upper, lower)
     
     # SET Kmeans 
     colors_labels_list = []
@@ -352,4 +308,3 @@ if __name__ == '__main__':
     # TEST: Kmean_statistics
     x,y,z = Kmean_statistics(imgs,5)
     print(f"KMEAN STATISTICS\n Time: {x}\n WCD: {y}\n Iterations: {z}")
-"""
