@@ -221,44 +221,7 @@ class KMeans:
         self.fish = self.WCD/self.inter_clas
         return self.fish
     
-    def bestK_fisher(self, max_K):
-        # Apply K-Means for the first time with K = 2
-        self.K = 2
-        self.fit()
-        
-        #Calculate WCD of K = 2
-        self.withinClassDistance()
-        self.inter_class()
-        f_ant = self.fisher()
-        #print(f_ant)
-        
-        i = 2 #=K
-        # Execute the loop until we find the optimal K or we exceed the maximum K
-        F = 0
-        while (i < max_K) and ((100-F) >= 20):
-            i += 1
-            # Apply K-Means with K to compare with K-Means with K-1
-            self.K = i
-            self.fit()
-            
-            # Calculate WCD of K
-            self.withinClassDistance()
-            self.inter_class()
-            f = self.fisher()
-            #print(f)
-            
-            F = 100*(f/f_ant)
-            f_ant = f
-            
-        if (i != max_K):
-            self.K = i-1
-            self.fit()
-            return i
-        # If we have not found an optimal K, we must return the maximum K
-        else:
-            return max_K
-    
-    def find_bestK(self, max_K):
+    def bestK_WCD(self, max_K):
         """
         Sets the best k analyzing the results up to 'max_K' clusters
 
@@ -293,6 +256,54 @@ class KMeans:
         # If we have not found an optimal K, we must return the maximum K
         else:
             return max_K
+    
+    def bestK_fisher(self, max_K):
+        # Apply K-Means for the first time with K = 2
+        self.K = 2
+        self.fit()
+        
+        #Calculate WCD of K = 2
+        self.withinClassDistance()
+        self.inter_class()
+        f_ant = self.fisher()
+        #print(f_ant)
+        
+        i = 2 #=K
+        # Execute the loop until we find the optimal K or we exceed the maximum K
+        F = 0
+        max_improvement = 0
+        best_K = 2
+        while (i < max_K):
+            i += 1
+            # Apply K-Means with K to compare with K-Means with K-1
+            self.K = i
+            self.fit()
+            
+            # Calculate WCD of K
+            self.withinClassDistance()
+            self.inter_class()
+            f = self.fisher()
+            #print(f)
+            
+            #calculate improvement
+            improvement = f_ant - f
+            
+            if improvement > max_improvement:
+                max_improvement = improvement
+                best_K = self.K
+            
+            f_ant = f
+            
+        self.K = best_K
+        self.fit()
+        return best_K
+    
+    def find_bestK(self, max_K):
+        if self.options['fitting'] == 'WCD':
+            best_K = self.bestK_WCD(10)
+        elif self.options['fitting'] == 'Fisher':
+            best_K = self.bestK_Fisher(10)
+        return best_K
 
 # Out-of-class functions
 def distance(X, C):
