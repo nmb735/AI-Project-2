@@ -108,9 +108,9 @@ class KMeans:
                     pixel_tuple = tuple(self.X[i])
                     if pixel_tuple not in unique_pixels:
                         unique_pixels.add(pixel_tuple)
-                        extracted_pixels.append(pixel)
+                        extracted_pixels.append(self.X[i])
                         c = c + 1
-                        i = c * (len(self.X)/self.K)
+                        i = c * (len(self.X)//self.K)
                     i = i + 1
                 self.centroids = np.array(extracted_pixels)
 
@@ -230,7 +230,7 @@ class KMeans:
         self.withinClassDistance()
         self.inter_class()
         f_ant = self.fisher()
-        print(f_ant)
+        #print(f_ant)
         
         i = 2 #=K
         # Execute the loop until we find the optimal K or we exceed the maximum K
@@ -245,7 +245,7 @@ class KMeans:
             self.withinClassDistance()
             self.inter_class()
             f = self.fisher()
-            print(f)
+            #print(f)
             
             F = 100*(f/f_ant)
             f_ant = f

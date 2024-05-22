@@ -10,8 +10,8 @@ from utils import rgb2gray # Not sure if we can import
 
 class KNN:
     def __init__(self, train_data, labels):
-        self._init_train(train_data)
-        self.labels = np.array(labels)
+        self._init_train_flip(train_data)
+        self.labels = np.concatenate((np.array(labels), np.array(labels)))
 
     def _init_train(self, train_data):
         """
@@ -42,25 +42,11 @@ class KNN:
                 # If RGB, convert to grayscale 
                 train_data = rgb2gray(train_data) 
             # Flip the images horizontally
-            train_data = np.flip(train_data, axis=1)
-            self.train_data = np.array(train_data.reshape((train_data.shape[0], -1)), dtype="float")
-
-    def _init_train_flip(self, train_data):
-        """
-        Initializes the train data
-        Args:
-            train_data: PxMxNx3 matrix corresponding to P color images
-        Return: 
-            assigns the train set (flipped horizontally) to the matrix self.train_data shaped as PxD (P points in a D dimensional space)
-        """
-        if len(train_data.shape) == 3:
-            # Already in Grayscale
-            if train_data.shape[-1] == 3: 
-                # If RGB, convert to grayscale 
-                train_data = rgb2gray(train_data) 
-            # Flip the images horizontally
-            train_data = np.flip(train_data, axis=1)
-            self.train_data = np.array(train_data.reshape((train_data.shape[0], -1)), dtype="float")
+            train_data_flipped = np.flip(train_data, axis=1)
+            train_data_flipped = np.array(train_data_flipped.reshape((train_data_flipped.shape[0], -1)), dtype="float")
+            train_data = np.array(train_data.reshape((train_data.shape[0], -1)), dtype="float")
+            self.train_data = np.concatenate((train_data, train_data_flipped), axis=0)
+            
             
     def get_k_neighbours(self, test_data, k):
         """
