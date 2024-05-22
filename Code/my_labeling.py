@@ -225,10 +225,12 @@ def testing(train_imgs): # Modify this function for testing - General Template
     shape_accuracy_list = []
     color_accuracy_list = []
     start_time = time.time()
+    options = {}
     # SET Kmeans 
     colors_labels_list = []
     for img in cropped_images:
-        km = KMeans(img)
+        km = KMeans(img,1,options)
+        km.find_bestK(10)
         km.fit()
         colors_labels_list.append(get_colors(km.centroids))
     colors_labels_list = np.array(colors_labels_list)
