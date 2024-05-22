@@ -221,42 +221,6 @@ class KMeans:
         self.fish = self.WCD/self.inter_clas
         return self.fish
     
-    def bestK_WCD(self, max_K):
-        """
-        Sets the best k analyzing the results up to 'max_K' clusters
-
-        Args:
-                max_k (int): maximum K value to test against
-        """
-        # Apply K-Means for the first time with K = 2
-        self.K = 2
-        self.fit()
-        #Calculate WCD of K = 2
-        previous_WCD = self.withinClassDistance()
-        
-        i = 2 #=K
-        DEC = 0
-        # Execute the loop until we find the optimal K or we exceed the maximum K
-        while (i < max_K) and ((100-DEC) >= 20):
-            i += 1
-            # Apply K-Means with K to compare with K-Means with K-1
-            self.K = i
-            self.fit()
-            # Calculate WCD of K
-            WCD = self.withinClassDistance()
-            # Calculate DEC with WCD of K and WCD of K-1
-            DEC = 100*(WCD/previous_WCD)
-            # The new value of WCD is now the previous one
-            previous_WCD = WCD
-        # If we have found an optimal K, we must execute K-Means with K-1, since K is passed from our criterion
-        if (i != max_K):
-            self.K = i-1
-            self.fit()
-            return i
-        # If we have not found an optimal K, we must return the maximum K
-        else:
-            return max_K
-    
     def bestK_fisher(self, max_K):
         # Apply K-Means for the first time with K = 2
         self.K = 2
@@ -302,8 +266,46 @@ class KMeans:
         if self.options['fitting'] == 'WCD':
             best_K = self.bestK_WCD(10)
         elif self.options['fitting'] == 'Fisher':
-            best_K = self.bestK_Fisher(10)
+            best_K = self.bestK_fisher(10)
         return best_K
+    
+    def bestK_WCD(self, max_K):
+        """
+        Sets the best k analyzing the results up to 'max_K' clusters
+
+        Args:
+                max_k (int): maximum K value to test against
+        """
+        # Apply K-Means for the first time with K = 2
+        self.K = 2
+        self.fit()
+        #Calculate WCD of K = 2
+        previous_WCD = self.withinClassDistance()
+        
+        i = 2 #=K
+        DEC = 0
+        # Execute the loop until we find the optimal K or we exceed the maximum K
+        while (i < max_K) and ((100-DEC) >= 20):
+            i += 1
+            # Apply K-Means with K to compare with K-Means with K-1
+            self.K = i
+            self.fit()
+            # Calculate WCD of K
+            WCD = self.withinClassDistance()
+            # Calculate DEC with WCD of K and WCD of K-1
+            DEC = 100*(WCD/previous_WCD)
+            # The new value of WCD is now the previous one
+            previous_WCD = WCD
+        # If we have found an optimal K, we must execute K-Means with K-1, since K is passed from our criterion
+        if (i != max_K):
+            self.K = i-1
+            self.fit()
+            return i
+        # If we have not found an optimal K, we must return the maximum K
+        else:
+            return max_K
+    
+
 
 # Out-of-class functions
 def distance(X, C):
