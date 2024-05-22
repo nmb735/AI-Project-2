@@ -10,8 +10,8 @@ from utils import rgb2gray # Not sure if we can import
 
 class KNN:
     def __init__(self, train_data, labels):
-        self._init_train_flip(train_data)
-        self.labels = np.concatenate((np.array(labels), np.array(labels)))
+        self._init_train(train_data)
+        self.labels = np.array(labels)
 
     def _init_train(self, train_data):
         """
