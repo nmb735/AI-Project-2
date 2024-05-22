@@ -99,7 +99,7 @@ class KMeans:
                             break
                 self.centroids = np.array(extracted_pixels)
 
-           elif self.options['km_init'] == 'custom': 
+            elif self.options['km_init'] == 'custom': 
                 unique_pixels = set()
                 extracted_pixels = []
                 i = 0
